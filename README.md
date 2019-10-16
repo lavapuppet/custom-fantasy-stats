@@ -6,3 +6,10 @@ Our personal NFL information aggregator
 
 1. Set up a MySQL DB called customFantasyStats. This should have a user cFSUser with no password.
  The python code will build the tables necessary to store the stats once this is done.
+
+2. Install mysql-connector for python: sudo python3 -m pip install mysql-connector
+
+
+
+NFL Fantasy API Documentation:
+https://api.fantasy.nfl.com/v2/docs/
