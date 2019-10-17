@@ -20,6 +20,16 @@ class sqlConnector:
         # Set the cursor to the db. This will be used to issue commands to the db
         self.cursor = self.db.cursor()
 
+    # checks if the table already exists
+    def checkExists(self, tableName):
+        self.cursor.execute('SHOW TABLES')
+        results = self.cursor.fetchall()
+        for entry in results:
+            for table in entry:
+                if tableName == table:
+                    return True
+        return False        
+
     # create a table in the db
     def createTable( self, tableName, headerDict, debug = False ):
         # Create a table with an id as the primary key that is auto incremented
@@ -111,6 +121,7 @@ class sqlConnector:
         self.cursor.execute( sqlString )
         return self.cursor.fetchall()
 
+    # FIXME Implement checkheaders to add new columns to existing table  
     # Check that the headers in a dictionary match with the expected ones for this table
     def checkHeaders( self, tableName, headerDict ):
         for header, value in headerDict:
@@ -135,6 +146,12 @@ if __name__ == "__main__":
     # Use a dictionary of the headers and their types to create a table
     headerDict = {'name':'VARCHAR(255)', 'team':'VARCHAR(255)',  'number':'INT', '88':'VARCHAR(255)'}
     db.createTable( 'testTable', headerDict, debug = False )
+
+    # Check if the test table exists
+    if (db.checkExists('testTable') == False):
+        print( "TEST ERROR IN CHECK EXISTS:" )
+        print( "TABLE testTable DOES NOT EXIST." )
+        exit()
 
     # Rows are inserted using a dictionary containing the column titles and the values corresponding
     valueList = [{'name':'Human1', 'number':62},
