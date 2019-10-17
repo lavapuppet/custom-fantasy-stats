@@ -1,44 +1,54 @@
 import requests
 
-
-def get_Player_Data(data):
-   return
-    
 def get_Headers(data, titles={}):
-    for topics in data:
-        #print(topics)
-        if(type(topics)==dict):
-            for keys in data[topics][0] :
-                print((keys)) 
-                if(type(data[topics][0][keys])==int):
-                   titles[keys] =  'INT';
-                elif(type(data[topics][0][keys])==float):
-                    titles[keys] =  'FLOAT';
-                elif(type(data[topics][0][keys])==str):
-                    titles[keys] =  'VARCHAR';
-                elif(type(data[topics][0][keys])==bool):
-                    titles[keys] =  'BOOL';
-                elif(type(data[topics][0][keys])==dict):
-                    titles = get_Headers(data[topics][0][keys],titles);
-                else:
-                    titles[keys] = 'unknown';
-        else:
-                if(type(data[topics])==int):
-                   titles[keys] =  'INT';
-                elif(type(data[topics][0])==float):
-                    titles[keys] =  'FLOAT';
-                elif(type(data[topics][0])==str):
-                    titles[keys] =  'VARCHAR';
-                elif(type(data[topics][0])==bool):
-                    titles[keys] =  'BOOL';
-                elif(type(data[topics][0])==dict):
-                    titles = get_Headers(data[topics][0][keys],titles);
-                else:
-                    titles[keys] = 'unknown';
+    if(type(data)==int):
+       titles[data] =  'INT';
+    elif(type(data)==float):
+        titles[data] =  'FLOAT';
+    elif(type(data)==str):
+        titles[data] =  'VARCHAR(255)';
+    elif(type(data)==bool):
+        titles[data] =  'BOOL';
+    else:
+        titles[data] = 'unknown'; #TODO change to a throw
             
     return titles
 
-def get_The_Data():
+def pull_From_Dict(stats, base_dict, titles):
+    print(stats)
+    for key, value in stats.items():
+        if (type(value) == dict):
+            base_dict, titles = pull_From_Dict(value, base_dict, titles)
+        else:
+            if key not in (titles):
+                titles = get_Headers(key, titles)
+            base_dict[key] = value
+    return base_dict, titles
+
+def get_Player_Data(data, titles, player_Data):
+    season = data['season']
+    week = data['week']
+    titles['season'] = 'VARCHAR(255)' 
+    titles['week'] = 'INT'
+    for player in data['players']:
+        base_dict = {}
+        base_dict['season'] = season
+        base_dict['week'] = week
+        base_dict, titles = pull_From_Dict(player,base_dict,titles)
+        player_Data.append(base_dict)
+    return player_Data, titles    
+
+
+
+def test_the_data():
+    second_stats = {'cat':'black'}
+    stats =[ {'1':'a' , '2':'b' , '3':'c', '4':second_stats}
+            , {'5':'a' , '2':'b' , '3':'c', '4':second_stats}]
+    return {'players':stats, 'season' :'1', 'week':'2'}
+
+
+
+def get_The_Data(season, week):
     resp = requests.get('https://api.fantasy.nfl.com/v1/players/stats',
                         headers={'Content-Type':'application/json'})
     if resp.status_code != 200:
@@ -51,12 +61,24 @@ def get_The_Data():
     data = resp.json() #data from our api. This is what we will use.
 
     titles={};
+    playerData = []
+
+    test_data = test_the_data()
+    test_titles={};
+    test_players = []
+    print(test_data)
+    test_data,test_titles = get_Player_Data(test_data,test_titles, test_players)    
+
+
 
     #getting list of player data headers. We remove season information and
-    get_Player_Data(data)
+    #playerData, titles = get_Player_Data(data, titles, playerData)
+    print(test_players)
+    print(test_titles)
+    return playerData,titles
 
 if __name__== "__main__":
-    get_The_Data()
+    get_The_Data(1,1)
 
 '''
 /game/centerpieces
