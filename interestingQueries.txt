@@ -1,0 +1,14 @@
+
+# Get the season totals for all Tight Ends
+SELECT name, ROUND( SUM(weekPts), 1 ) as seasonPts From weekStats WHERE position='TE' GROUP BY name ORDER BY seasonPts DESC;
+
+# Get the points for all JAX Wide-Receivers in week 4
+SELECT name, teamAbbr, weekPts FROM weekStats WHERE teamAbbr='JAX' AND position='WR' and week=4;
+
+# Get the season points for all JAX Wide-Receivers
+SELECT name, teamAbbr, ROUND( sum(weekPts), 1 ) FROM weekStats WHERE teamAbbr='JAX' AND position='WR' GROUP BY name ORDER BY sum(weekPts) DESC;
+
+#May need to run the following as root to allow this grouping:
+SET GLOBAL sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));
+
+
