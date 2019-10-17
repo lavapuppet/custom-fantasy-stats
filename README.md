@@ -9,6 +9,8 @@ Our personal NFL information aggregator
 
 2. Install mysql-connector for python: sudo python3 -m pip install mysql-connector
 
+3. Install requests for python: sudo python3 -m pip install requests
+
 
 
 NFL Fantasy API Documentation:

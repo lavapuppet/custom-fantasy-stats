@@ -23,9 +23,9 @@ class sqlConnector:
     # create a table in the db
     def createTable( self, tableName, headerDict, debug = False ):
         # Create a table with an id as the primary key that is auto incremented
-        sqlString = "CREATE TABLE " + tableName + " (id INT AUTO_INCREMENT PRIMARY KEY"
+        sqlString = "CREATE TABLE " + tableName + " (entry_id INT AUTO_INCREMENT PRIMARY KEY"
         for header, dataType in headerDict.items():
-            sqlString += ", " + header + " " + dataType
+            sqlString += ", `" + header + "` " + dataType
         sqlString += ")"
         if debug:
             print( sqlString )
@@ -50,7 +50,7 @@ class sqlConnector:
         valueString = 'VALUES ('
         valueList = []
         for header,value in insertDict.items():
-            sqlString += header + ","
+            sqlString += "`" + header + "`,"
             valueString += "%s,"
             valueList.append( str( value ) )
         # Delete the final trailing comma
@@ -133,7 +133,7 @@ if __name__ == "__main__":
     db = sqlConnector()
     
     # Use a dictionary of the headers and their types to create a table
-    headerDict = {'name':'VARCHAR(255)', 'team':'VARCHAR(255)',  'number':'INT'}
+    headerDict = {'name':'VARCHAR(255)', 'team':'VARCHAR(255)',  'number':'INT', '88':'VARCHAR(255)'}
     db.createTable( 'testTable', headerDict, debug = False )
 
     # Rows are inserted using a dictionary containing the column titles and the values corresponding
