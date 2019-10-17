@@ -37,12 +37,14 @@ class sqlConnector:
         results = self.cursor.fetchall()
         if ( results ):
             for weeks in results:
-                if weeks == week:
+                if weeks[0] == week:
                     return True
-        else:
-            return False
+        return False
 
-
+    # Delete all the data from a given week
+    def deleteWeek( self, tableName, week ):
+        sqlString = "DELETE FROM " + tableName + " WHERE week=" + str( week )
+        self.cursor.execute( sqlString )
 
     # create a table in the db
     def createTable( self, tableName, headerDict, debug = False ):
@@ -200,9 +202,11 @@ if __name__ == "__main__":
         db.dropTable( 'testTable' )
         exit()
 
+    db.deleteWeek( 'testTable', 4 )
+
     # Simple selects can be issued by passing a list of the desired headers
     selectedData = db.select( 'testTable', ['name', 'number', 'team'] )
-    expectData = [('Human1', 62, None), ('Person2', 13, 'CHI'), ('Lady3', 449, None), ('Man4', 86, 'PAT')] 
+    expectData = [('Person2', 13, 'CHI'), ('Lady3', 449, None), ('Man4', 86, 'PAT')] 
     if ( selectedData != expectData ):
         print( "TEST ERROR IN SIMPLE SELECT:")
         print( "Expected:", expectData )

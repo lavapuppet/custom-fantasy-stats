@@ -81,7 +81,7 @@ def get_The_Data(season, week, statType, test=False):
         #getting list of player data headers. We remove season information and
         playerData, titles = get_Player_Data(data, titles, playerData)
         #print(test_players)
-        print(titles)
+        #print(titles)
     return playerData,titles
 
 if __name__== "__main__":
