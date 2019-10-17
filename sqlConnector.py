@@ -143,7 +143,7 @@ class sqlConnector:
     def updateHeaders( self, tableName, headerDict ):
         for header, value in headerDict.items():
             if header not in self.tableHeaders[tableName]:
-                sqlString = "ALTER TABLE " + tableName + " ADD " + header + " " + value;
+                sqlString = "ALTER TABLE " + tableName + " ADD `" + header + "` " + value;
                 self.cursor.execute( sqlString )
                 self.tableHeaders[tableName][header] = value
 
