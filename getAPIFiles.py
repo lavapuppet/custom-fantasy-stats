@@ -50,10 +50,13 @@ def test_the_data():
 
 
 # gets the data
-def get_The_Data(season, week, test=False):
+def get_The_Data(season, week, statType, test=False):
     #TODO change this to allow customised string requests with week and season
+    paramData = {'season':season,'week': week, 'statType': statType}
+
     resp = requests.get('https://api.fantasy.nfl.com/v1/players/stats',
-                        headers={'Content-Type':'application/json'})
+                        headers={'Content-Type':'application/json'},
+                        params=paramData)
     if resp.status_code != 200:
         # This means something went wrong.
         raise ApiError('GET /tasks/ {}'.format(resp.status_code))
@@ -82,7 +85,7 @@ def get_The_Data(season, week, test=False):
     return playerData,titles
 
 if __name__== "__main__":
-    get_The_Data(1,1, True)
+    get_The_Data(1,1,'weekStats', True)
 
 '''
 /game/centerpieces
