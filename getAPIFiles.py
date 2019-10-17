@@ -16,7 +16,6 @@ def get_Headers(data, titles={}):
     return titles
 
 def pull_From_Dict(stats, base_dict, titles):
-    print(stats)
     for key, value in stats.items():
         if key in translateStats.translateDict:
             key = translateStats.translateDict[key]
@@ -50,8 +49,9 @@ def test_the_data():
     return {'players':stats, 'season' :'1', 'week':'2'}
 
 
-
-def get_The_Data(season, week):
+# gets the data
+def get_The_Data(season, week, test=False):
+    #TODO change this to allow customised string requests with week and season
     resp = requests.get('https://api.fantasy.nfl.com/v1/players/stats',
                         headers={'Content-Type':'application/json'})
     if resp.status_code != 200:
@@ -66,22 +66,23 @@ def get_The_Data(season, week):
     titles={};
     playerData = []
 
-    test_data = test_the_data()
-    test_titles={};
-    test_players = []
-    print(test_data)
-    test_data,test_titles = get_Player_Data(test_data,test_titles, test_players)    
+    if test == True:
+        test_data = test_the_data()
+        test_titles={};
+        test_players = []
+        print(test_data)
+        test_data,test_titles = get_Player_Data(test_data,test_titles, test_players)    
 
 
-
-    #getting list of player data headers. We remove season information and
-    #playerData, titles = get_Player_Data(data, titles, playerData)
-    print(test_players)
-    print(test_titles)
+    else:
+        #getting list of player data headers. We remove season information and
+        playerData, titles = get_Player_Data(data, titles, playerData)
+        #print(test_players)
+        print(titles)
     return playerData,titles
 
 if __name__== "__main__":
-    get_The_Data(1,1)
+    get_The_Data(1,1, True)
 
 '''
 /game/centerpieces
