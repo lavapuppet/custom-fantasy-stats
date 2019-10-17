@@ -1,4 +1,5 @@
 import requests
+import translateStats
 
 def get_Headers(data, titles={}):
     if(type(data)==int):
@@ -17,6 +18,8 @@ def get_Headers(data, titles={}):
 def pull_From_Dict(stats, base_dict, titles):
     print(stats)
     for key, value in stats.items():
+        if key in translateStats.translateDict:
+            key = translateStats.translateDict[key]
         if (type(value) == dict):
             base_dict, titles = pull_From_Dict(value, base_dict, titles)
         else:
