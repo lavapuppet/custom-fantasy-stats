@@ -4,6 +4,7 @@ import mysql.connector
 class sqlConnector:
     dbName = 'customFantasyStats'
     dbUser = 'cFSUser'
+    tableHeaders = {}
     #db         database connection
     #cursor     used for passing commands to the db
         
@@ -56,6 +57,7 @@ class sqlConnector:
         if debug:
             print( sqlString )
         self.cursor.execute( sqlString )
+        self.tableHeaders[tableName] = headerDict
 
     def dropTable( self, tableName ):
         self.cursor.execute( "DROP TABLE " + tableName )
@@ -137,12 +139,13 @@ class sqlConnector:
         self.cursor.execute( sqlString )
         return self.cursor.fetchall()
 
-    # FIXME Implement checkheaders to add new columns to existing table  
-    # Check that the headers in a dictionary match with the expected ones for this table
-    def checkHeaders( self, tableName, headerDict ):
-        for header, value in headerDict:
-            print( "not implemented" )
-            exit()
+    # Check that the headers in a dictionary match with the expected ones for this table and add them if they don't
+    def updateHeaders( self, tableName, headerDict ):
+        for header, value in headerDict.items():
+            if header not in self.tableHeaders[tableName]:
+                sqlString = "ALTER TABLE " + tableName + " ADD " + header + " " + value;
+                self.cursor.execute( sqlString )
+                self.tableHeaders[tableName][header] = value
 
     # Simply execute the given select query if the interface for the functionality has not been provided
     def executeSelect( self, query ):
@@ -170,13 +173,13 @@ if __name__ == "__main__":
     db.createTable( 'testTable', headerDict, debug = False )
 
     # Check if the test table exists
-    if (db.checkTableExists('testTable') == False):
+    if ( db.checkTableExists('testTable') == False ):
         print( "TEST ERROR IN CHECK EXISTS:" )
         print( "TABLE testTable DOES NOT EXIST." )
         exit()
 
     # Checks if week exists in a table before we populate it.
-    if (db.checkWeekExists('testTable', week=6 ) == True):
+    if ( db.checkWeekExists('testTable', week=6 ) == True ):
         print( "TEST ERROR IN CHECK WEEK EXISTS:" )
         print( "TABLE testTable CONTAINS WEEK 6." )
         db.dropTable( 'testTable' )
@@ -202,6 +205,11 @@ if __name__ == "__main__":
         db.dropTable( 'testTable' )
         exit()
 
+    # Add a new column with name face
+    headerDict = {'name':'VARCHAR(255)', 'team':'VARCHAR(255)',  'face':'VARCHAR(255)', '88':'VARCHAR(255)', 'week':'INT'}
+    db.updateHeaders( 'testTable', headerDict )
+
+    # Delete all entries with week=4
     db.deleteWeek( 'testTable', 4 )
 
     # Simple selects can be issued by passing a list of the desired headers
@@ -215,9 +223,9 @@ if __name__ == "__main__":
         exit()
 
     # More complicated selects should use the execute command
-    executeString = "SELECT name, team  FROM testTable WHERE team IS NOT NULL"
+    executeString = "SELECT name, team, face FROM testTable WHERE team IS NOT NULL"
     selectedData = db.executeSelect( executeString )
-    expectData = [('Person2', 'CHI'), ('Man4', 'PAT')]
+    expectData = [('Person2', 'CHI', None), ('Man4', 'PAT', None)]
     if ( selectedData != expectData ):
         print( "TEST ERROR IN COMPLICATED SELECT:")
         print( "Expected:", expectData )

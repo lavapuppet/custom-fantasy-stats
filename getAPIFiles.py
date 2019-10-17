@@ -1,29 +1,34 @@
 import requests
 import translateStats
 
-def get_Headers(data, titles={}):
-    if(type(data)==int):
-       titles[data] =  'INT';
-    elif(type(data)==float):
+def get_Headers(data, value, titles={}):
+    if(type(value)==int):
+       titles[data] =  'FLOAT';
+#    elif(type(data)==str and  '.' in data ):
+    elif(type(value)==str and  '.' in data ):
         titles[data] =  'FLOAT';
-    elif(type(data)==str):
+    elif(type(value)==float):
+        titles[data] =  'FLOAT';
+    elif(type(value)==str):
         titles[data] =  'VARCHAR(255)';
-    elif(type(data)==bool):
+    elif(type(value)==bool):
         titles[data] =  'BOOL';
     else:
-        titles[data] = 'unknown'; #TODO change to a throw
+        titles[data] = 'VARCHAR(255)'; #TODO change to a throw
             
     return titles
 
 def pull_From_Dict(stats, base_dict, titles):
     for key, value in stats.items():
+        if key == 'esbid' or key == 'gsisPlayerId':
+            continue
         if key in translateStats.translateDict:
             key = translateStats.translateDict[key]
         if (type(value) == dict):
             base_dict, titles = pull_From_Dict(value, base_dict, titles)
         else:
             if key not in (titles):
-                titles = get_Headers(key, titles)
+                titles = get_Headers(key, value, titles)
             base_dict[key] = value
     return base_dict, titles
 
