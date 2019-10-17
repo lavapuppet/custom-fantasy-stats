@@ -21,7 +21,7 @@ class sqlConnector:
         self.cursor = self.db.cursor()
 
     # checks if the table already exists
-    def checkExists(self, tableName):
+    def checkTableExists( self, tableName ):
         self.cursor.execute('SHOW TABLES')
         results = self.cursor.fetchall()
         for entry in results:
@@ -29,6 +29,20 @@ class sqlConnector:
                 if tableName == table:
                     return True
         return False        
+
+    # checks if the week already exists in a table
+    def checkWeekExists( self, tableName, week ):
+        sqlString = "SELECT DISTINCT week FROM " + tableName + " WHERE week = " + str( week )
+        self.cursor.execute( sqlString ) 
+        results = self.cursor.fetchall()
+        if ( results ):
+            for weeks in results:
+                if weeks == week:
+                    return True
+        else:
+            return False
+
+
 
     # create a table in the db
     def createTable( self, tableName, headerDict, debug = False ):
@@ -142,21 +156,35 @@ def sqlType( header ):
 if __name__ == "__main__":
     # Initialise a connection to the DB
     db = sqlConnector()
-    
+
+    # Checks if a table already exists before creation    
+    if (db.checkTableExists('testTable') == True):
+        print( "TEST ERROR IN CHECK EXISTS:" )
+        print( "TABLE testTable EXISTS SOMEHOW." )
+        db.dropTable( 'testTable' )
+
     # Use a dictionary of the headers and their types to create a table
-    headerDict = {'name':'VARCHAR(255)', 'team':'VARCHAR(255)',  'number':'INT', '88':'VARCHAR(255)'}
+    headerDict = {'name':'VARCHAR(255)', 'team':'VARCHAR(255)',  'number':'INT', '88':'VARCHAR(255)', 'week':'INT'}
     db.createTable( 'testTable', headerDict, debug = False )
 
     # Check if the test table exists
-    if (db.checkExists('testTable') == False):
+    if (db.checkTableExists('testTable') == False):
         print( "TEST ERROR IN CHECK EXISTS:" )
         print( "TABLE testTable DOES NOT EXIST." )
         exit()
 
+    # Checks if week exists in a table before we populate it.
+    if (db.checkWeekExists('testTable', week=6 ) == True):
+        print( "TEST ERROR IN CHECK WEEK EXISTS:" )
+        print( "TABLE testTable CONTAINS WEEK 6." )
+        db.dropTable( 'testTable' )
+        exit()
+
+
     # Rows are inserted using a dictionary containing the column titles and the values corresponding
-    valueList = [{'name':'Human1', 'number':62},
+    valueList = [{'name':'Human1', 'number':62, 'week':4},
                  {'name':'Person2', 'number':13, 'team':'CHI'},
-                 {'name':'Lady3', 'number':449},
+                 {'name':'Lady3', 'number':449, 'week':6},
                  {'name':'Man4', 'number':86, 'team':'PAT'}]
                 
     # We pass false to indicate it should not be committed to HDD until later
@@ -164,6 +192,13 @@ if __name__ == "__main__":
         db.insert( 'testTable', valueDict, commit=False, debug=False )
     # Use the commit function to save to HDD
     db.commit()
+
+    # Checks if a week has been entered in a specific table 
+    if (db.checkWeekExists('testTable', week=6 ) == False):
+        print( "TEST ERROR IN CHECK WEEK EXISTS:" )
+        print( "TABLE testTable IS MISSING DATA." )
+        db.dropTable( 'testTable' )
+        exit()
 
     # Simple selects can be issued by passing a list of the desired headers
     selectedData = db.select( 'testTable', ['name', 'number', 'team'] )
