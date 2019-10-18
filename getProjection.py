@@ -6,18 +6,19 @@ import schedule
 positionList = ['QB', 'RB', 'WR', 'TE', 'K', 'DEF']
 
 # This creates a table of points against all teams by weeks
-def buildPointsAgainst():
+def buildPointsAgainst( rebuild = False ):
 
     tableName = 'ptsAgainst'
     titles = { 'team':'VARCHAR(255)','opp':'VARCHAR(255)', 'weekPtsAg':'FLOAT', 'position':'VARCHAR(255)' }
-    #FIXME
-    # If we have the table from before, drop it and regenerate?
-    if ( db.checkTableExists( tableName ) == True ):
+    # If we have the table from before, rebuild it if the user wants, otherwise we're done
+    if ( db.checkTableExists( tableName ) == True and rebuild == False):
+        return
+    elif ( rebuild == True ):
         db.dropTable( tableName )
 
     db.createTable( tableName, titles )
 
-    #FIXME WE probably want to be able to discount the team we are interested from the ptsAgainst data due to skewing
+    #We discount the team we are interested from the ptsAgainst data due to skewing
     for team in schedule.schedule['2019']:
         if team != '':
             for pos in positionList:
@@ -74,12 +75,23 @@ def getPlayerInfo( player ):
     playerInfo = {'name':player, 'team':result[0][1], 'position':result[0][2] }
     return playerInfo
 
+# If the player has "'" characters they will break the sql query. escape them
+# We do this by replacin all cases of ' with ''
+def escapePlayer( player ):
+    return player.replace( "'", "''" )
+
 
 if __name__=='__main__':
     maxWeek = 7 
-    if len( sys.argv ) > 3:
-        print( "Usage: getProjections.py playerName weekNumberToPredict" )
-    elif len( sys.argv ) == 3:
+    if len( sys.argv ) > 4:
+        print( "Usage: getProjections.py playerName weekNumberToPredict toRebuildOrNotToRebuild" )
+        exit()
+    elif len( sys.argv ) == 4:
+        rebuild = bool( sys.argv[3] )
+    else:
+        rebuild = False
+
+    if len( sys.argv ) >= 3:
         player = sys.argv[1]
         predWeek = int( sys.argv[2] )
     else:
@@ -88,14 +100,19 @@ if __name__=='__main__':
 
     db = sqlConnector.sqlConnector()
 
+    # Select the first player that matches the player string
+    player = escapePlayer( player )
     possString = "SELECT name, teamAbbr FROM weekStats where name LIKE '" + player + "'" 
     possibles = db.executeSelect( possString )
     player = possibles[0][0]
     print(player)
-    playerInfo = getPlayerInfo( player )
+    
+    # If the player has "'" characters they will break the sql query. escape them
+    # Note that the user want's their player output in the format they usually see it, so don't overwrite the player name
+    playerInfo = getPlayerInfo( escapePlayer( player ) )
 
     #FIXME Build the points against table if it does not already exist
-    #getPointsAgainst()
+    buildPointsAgainst( rebuild )
 
     pointsMult, playerPct = getPointsMult( playerInfo, predWeek )
     
