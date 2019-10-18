@@ -1,5 +1,6 @@
 import requests
 import translateStats
+import schedule from schedule
 
 def get_Headers(data, value, titles={}):
     if(type(value)==int):
@@ -37,11 +38,13 @@ def get_Player_Data(data, titles, player_Data):
     week = data['week']
     titles['season'] = 'VARCHAR(255)' 
     titles['week'] = 'INT'
+    titles['opponent'] = 'VARCHAR(255)'
     for player in data['players']:
         base_dict = {}
         base_dict['season'] = season
         base_dict['week'] = week
         base_dict, titles = pull_From_Dict(player,base_dict,titles)
+        base_dict['opponent'] = schedule[season][base_dict['teamAbbr']][week]
         player_Data.append(base_dict)
     return player_Data, titles    
 
