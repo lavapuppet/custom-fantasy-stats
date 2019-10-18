@@ -54,12 +54,11 @@ def test_the_data():
     second_stats = {'cat':'black'}
     stats =[ {'1':'a' , '2':'b' , '3':'c', '4':second_stats}
             , {'5':'a' , '2':'b' , '3':'c', '4':second_stats}]
-    return {'players':stats, 'season' :'1', 'week':'2'}
+    return {'players':stats,'teamAbbr':'CAR' 'season' :'1', 'week':'2'}
 
 
 # gets the data
 def get_The_Data(season, week, statType, test=False):
-    #TODO change this to allow customised string requests with week and season
     paramData = {'season':season,'week': week, 'statType': statType}
 
     resp = requests.get('https://api.fantasy.nfl.com/v1/players/stats',
