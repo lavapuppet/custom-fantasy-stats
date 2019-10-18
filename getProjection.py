@@ -30,41 +30,62 @@ def buildPointsAgainst():
                         
 
 def getPointsMult( playerInfo, predWeek ):
-    ptsMultAvg = 0.0
-    playerPct = 0.0
-    plWeeksPlayed = 0
-    teamWeeksPlayed = 0
+    W1 = 0.6
+    W = [ 1-W1, W1 ]
+    jcount = 0 
+    games = 3
     team = playerInfo['team']
     position = playerInfo['position']
     name = playerInfo['name']
-    for i in range( 1, predWeek ):
-        opponent = schedule.schedule['2019'][team][i]
-        # Once we have actually played someone, get that team's average points against excluding ourselves.
-        if ( opponent != 'BYE' ):
-            teamWeeksPlayed += 1
-            ptsAgString = "SELECT AVG( weekPtsAg ), team FROM ptsAgainst WHERE team='" + opponent + "' AND position='" + position + "' AND opp!='" + team + "'";
-            print( "SELECT AVG( weekPtsAg ), team FROM ptsAgainst WHERE team='" + opponent + "' AND position='" + position + "' AND opp!='" + team + "'");
-            result = db.executeSelect( ptsAgString )
-            oppAvgAg = result[0][0] 
+    wPtsMult = 0.0
+    wPlayerPct = 0.0
+    for j in [0,1]:
+        ptsMultAvg = 0.0 #number measuring the strength of offense
+        playerPct = 0.0 # number measuring the percentage of team points a player gets
+        plWeeksPlayed = 0
+        teamWeeksPlayed = 0
+        for i in range( 1 + j*(predWeek - games ) , predWeek - games  + (j * games)  ):
+            opponent = schedule.schedule['2019'][team][i]
+            # Once we have actually played someone, get that team's average points against excluding ourselves.
+            if ( opponent != 'BYE' ):
+                teamWeeksPlayed += 1
+                ptsAgString = "SELECT AVG( weekPtsAg ), team FROM ptsAgainst WHERE team='" + opponent + "' AND position='" + position + "' AND opp!='" + team + "'";
+                print( "SELECT AVG( weekPtsAg ), team FROM ptsAgainst WHERE team='" + opponent + "' AND position='" + position + "' AND opp!='" + team + "'");
+                result = db.executeSelect( ptsAgString )
+                oppAvgAg = result[0][0] 
 
-            ptsForString = "SELECT ROUND( SUM( weekPts ), 2), teamAbbr, opponent FROM weekStats WHERE teamAbbr='" + team + "' and position='" + position + "' and week=" + str( i );
-            result = db.executeSelect( ptsForString )
-            teamPts = result[0][0]
-            ptsMultAvg += teamPts/oppAvgAg
+                ptsForString = "SELECT ROUND( SUM( weekPts ), 2), teamAbbr, opponent FROM weekStats WHERE teamAbbr='" + team + "' and position='" + position + "' and week=" + str( i );
+                result = db.executeSelect( ptsForString )
+                teamPts = result[0][0]
+                ptsMultAvg += teamPts/oppAvgAg
 
-            playerString = "SELECT weekPts, name, opponent FROM weekStats WHERE name='" + name + "' and week=" + str( i );
-            result = db.executeSelect( playerString )
-            if ( result ):
-                plWeeksPlayed += 1
-                playerPts = result[0][0]
-                playerPct += playerPts/teamPts
-                #print( oppAvgAg, ptsFor, ptsFor/oppAvgAg )
+                playerString = "SELECT weekPts, name, opponent FROM weekStats WHERE name='" + name + "' and week=" + str( i );
+                result = db.executeSelect( playerString )
+                if ( result ):
+                    plWeeksPlayed += 1
+                    playerPts = result[0][0]
+                    playerPct += playerPts/teamPts
+                    #print( oppAvgAg, ptsFor, ptsFor/oppAvgAg )
 
-    ptsMultAvg = ptsMultAvg / teamWeeksPlayed
-    playerPct = playerPct / plWeeksPlayed
+        if plWeeksPlayed == 0:
+            W[jcount] = 0
+            W[(jcount+1) % 2] = 1
+            wPlayerPct = wPlayerPct/(1-W1) 
+        else:
+            playerPct = playerPct / plWeeksPlayed
+
+        ptsMultAvg = ptsMultAvg / teamWeeksPlayed
+        jcount += 1
+
+        if(j==0):
+            wPtsMult += ptsMultAvg * (1 - W1)
+            wPlayerPct += playerPct * W[0] 
+        else:
+            wPtsMult+=ptsMultAvg * W1 
+            wPlayerPct += playerPct * W[1] 
 
     print( round( ptsMultAvg, 2 ) )
-    return ptsMultAvg, playerPct
+    return wPtsMult, wPlayerPct
 
 
 def getPlayerInfo( player ):
