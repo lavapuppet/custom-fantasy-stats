@@ -1,36 +1,36 @@
 schedule = { #  0   1	2	3	4	5	6	7	8	9	10	11	12	13	14	15	16	17
     '2019':{
-        'ARI':['PRE', 'DET', 'BAL', 'CAR', 'SEA', 'CIN', 'ATL', 'NYG', 'NO', 'SF', 'TB', 'SF', 'BYE', 'LAR', 'PIT', 'CLE', 'SEA', 'LAR']
-        'ATL':['PRE', 'MIN', 'PHI', 'IND', 'TEN', 'HOU', 'ARI', 'LAR', 'SEA', 'BYE', 'NO', 'CAR', 'TB', 'NO', 'CAR', 'SF', 'JAX', 'TB']
-        'BAL':['PRE', 'MIA', 'ARI', 'KC', 'CLE', 'PIT', 'CIN', 'SEA', 'BYE', 'NE', 'CIN', 'HOU', 'LAR', 'SF', 'BUF', 'NYJ', 'CLE', 'PIT']
-        'BUF':['PRE', 'NYJ', 'NYG', 'CIN', 'NE', 'TEN', 'BYE', 'MIA', 'PHI', 'WSH', 'CLE', 'MIA', 'DEN', 'DAL', 'BAL', 'PIT', 'NE', 'NYJ']
-        'CAR':['PRE', 'LAR', 'TB', 'ARI', 'HOU', 'JAX', 'TB', 'BYE', 'SF', 'TEN', 'GB', 'ATL', 'NO', 'WSH', 'ATL', 'SEA', 'IND', 'NO']
-        'CHI':['PRE', 'GB', 'DEN', 'WSH', 'MIN', 'OAK', 'BYE', 'NO', 'LAC', 'PHI', 'DET', 'LAR', 'NYG', 'DET', 'DAL', 'GB', 'KC', 'MIN']
-        'CIN':['PRE', 'SEA', 'SF', 'BUF', 'PIT', 'ARI', 'BAL', 'JAX', 'LAR', 'BYE', 'BAL', 'OAK', 'PIT', 'NYJ', 'CLE', 'NE', 'MIA', 'CLE']
-        'CLE':['PRE', 'TEN', 'NYJ', 'LAR', 'BAL', 'SF', 'SEA', 'BYE', 'NE', 'DEN', 'BUF', 'PIT', 'MIA', 'PIT', 'CIN', 'ARI', 'BAL', 'CIN']
-        'DAL':['PRE', 'NYG', 'WSH', 'MIA', 'NO', 'GB', 'NYJ', 'PHI', 'BYE', 'NYG', 'MIN', 'DET', 'NE', 'BUF', 'CHI', 'LAR', 'PHI', 'WSH']
-        'DEN':['PRE', 'OAK', 'CHI', 'GB', 'JAX', 'LAC', 'TEN', 'KC', 'IND', 'CLE', 'BYE', 'MIN', 'BUF', 'LAC', 'HOU', 'KC', 'DET', 'OAK']
-        'DET':['PRE', 'ARI', 'LAC', 'PHI', 'KC', 'BYE', 'GB', 'MIN', 'NYG', 'OAK', 'CHI', 'DAL', 'WSH', 'CHI', 'MIN', 'TB', 'DEN', 'GB']
-        'GB' :['PRE', 'CHI', 'MIN', 'DEN', 'PHI', 'DAL', 'DET', 'OAK', 'KC', 'LAC', 'CAR', 'BYE', 'SF', 'NYG', 'WSH', 'CHI', 'MIN', 'DET']
-        'HOU':['PRE', 'NO', 'JAX', 'LAC', 'CAR', 'ATL', 'KC', 'IND', 'OAK', 'JAX', 'BYE', 'BAL', 'IND', 'NE', 'DEN', 'TEN', 'TB', 'TEN']
-        'IND':['PRE', 'LAC', 'TEN', 'ATL', 'OAK', 'KC', 'BYE', 'HOU', 'DEN', 'PIT', 'MIA', 'JAX', 'HOU', 'TEN', 'TB', 'NO', 'CAR', 'JAX']
-        'JAC':['PRE', 'KC', 'HOU', 'TEN', 'DEN', 'CAR', 'NO', 'CIN', 'NYJ', 'HOU', 'BYE', 'IND', 'TEN', 'TB', 'LAC', 'OAK', 'ATL', 'IND']
-        'KC' :['PRE', 'JAX', 'OAK', 'BAL', 'DET', 'IND', 'HOU', 'DEN', 'GB', 'MIN', 'TEN', 'LAC', 'BYE', 'OAK', 'NE', 'DEN', 'CHI', 'LAC']
-        'LAC':['PRE', 'IND', 'DET', 'HOU', 'MIA', 'DEN', 'PIT', 'TEN', 'CHI', 'GB', 'OAK', 'KC', 'BYE', 'DEN', 'JAX', 'MIN', 'OAK', 'KC']
-        'LAR':['PRE', 'CAR', 'NO', 'CLE', 'TB', 'SEA', 'SF', 'ATL', 'CIN', 'BYE', 'PIT', 'CHI', 'BAL', 'ARI', 'SEA', 'DAL', 'SF', 'ARI']
-        'MIA':['PRE', 'BAL', 'NE', 'DAL', 'LAC', 'BYE', 'WSH', 'BUF', 'PIT', 'NYJ', 'IND', 'BUF', 'CLE', 'PHI', 'NYJ', 'NYG', 'CIN', 'NE']
-        'MIN':['PRE', 'ATL', 'GB', 'OAK', 'CHI', 'NYG', 'PHI', 'DET', 'WSH', 'KC', 'DAL', 'DEN', 'BYE', 'SEA', 'DET', 'LAC', 'GB', 'CHI']
-        'NE' :['PRE', 'PIT', 'MIA', 'NYJ', 'BUF', 'WSH', 'NYG', 'NYJ', 'CLE', 'BAL', 'BYE', 'PHI', 'DAL', 'HOU', 'KC', 'CIN', 'BUF', 'MIA']
-        'NO' :['PRE', 'HOU', 'LAR', 'SEA', 'DAL', 'TB', 'JAX', 'CHI', 'ARI', 'BYE', 'ATL', 'TB', 'CAR', 'ATL', 'SF', 'IND', 'TEN', 'CAR']
-        'NYG':['PRE', 'DAL', 'BUF', 'TB', 'WSH', 'MIN', 'NE', 'ARI', 'DET', 'DAL', 'NYJ', 'BYE', 'CHI', 'GB', 'PHI', 'MIA', 'WSH', 'PHI']
-        'NYJ':['PRE', 'BUF', 'CLE', 'NE', 'BYE', 'PHI', 'DAL', 'NE', 'JAX', 'MIA', 'NYG', 'WSH', 'OAK', 'CIN', 'MIA', 'BAL', 'PIT', 'BUF']
-        'OAK':['PRE', 'DEN', 'KC', 'MIN', 'IND', 'CHI', 'BYE', 'GB', 'HOU', 'DET', 'LAC', 'CIN', 'NYJ', 'KC', 'TEN', 'JAX', 'LAC', 'DEN']
-        'PHI':['PRE', 'WSH', 'ATL', 'DET', 'GB', 'NYJ', 'MIN', 'DAL', 'BUF', 'CHI', 'BYE', 'NE', 'SEA', 'MIA', 'NYG', 'WSH', 'DAL', 'NYG']
-        'PIT':['PRE', 'NE', 'SEA', 'SF', 'CIN', 'BAL', 'LAC', 'BYE', 'MIA', 'IND', 'LAR', 'CLE', 'CIN', 'CLE', 'ARI', 'BUF', 'NYJ', 'BAL']
-        'SF' :['PRE', 'TB', 'CIN', 'PIT', 'BYE', 'CLE', 'LAR', 'WSH', 'CAR', 'ARI', 'SEA', 'ARI', 'GB', 'BAL', 'NO', 'ATL', 'LAR', 'SEA']
-        'SEA':['PRE', 'CIN', 'PIT', 'NO', 'ARI', 'LAR', 'CLE', 'BAL', 'ATL', 'TB', 'SF', 'BYE', 'PHI', 'MIN', 'LAR', 'CAR', 'ARI', 'SF']
-        'TB' :['PRE', 'SF', 'CAR', 'NYG', 'LAR', 'NO', 'CAR', 'BYE', 'TEN', 'SEA', 'ARI', 'NO', 'ATL', 'JAX', 'IND', 'DET', 'HOU', 'ATL']
-        'TEN':['PRE', 'CLE', 'IND', 'JAX', 'ATL', 'BUF', 'DEN', 'LAC', 'TB', 'CAR', 'KC', 'BYE', 'JAX', 'IND', 'OAK', 'HOU', 'NO', 'HOU']
+        'ARI':['PRE', 'DET', 'BAL', 'CAR', 'SEA', 'CIN', 'ATL', 'NYG', 'NO', 'SF', 'TB', 'SF', 'BYE', 'LAR', 'PIT', 'CLE', 'SEA', 'LAR'],
+        'ATL':['PRE', 'MIN', 'PHI', 'IND', 'TEN', 'HOU', 'ARI', 'LAR', 'SEA', 'BYE', 'NO', 'CAR', 'TB', 'NO', 'CAR', 'SF', 'JAX', 'TB'],
+        'BAL':['PRE', 'MIA', 'ARI', 'KC', 'CLE', 'PIT', 'CIN', 'SEA', 'BYE', 'NE', 'CIN', 'HOU', 'LAR', 'SF', 'BUF', 'NYJ', 'CLE', 'PIT'],
+        'BUF':['PRE', 'NYJ', 'NYG', 'CIN', 'NE', 'TEN', 'BYE', 'MIA', 'PHI', 'WSH', 'CLE', 'MIA', 'DEN', 'DAL', 'BAL', 'PIT', 'NE', 'NYJ'],
+        'CAR':['PRE', 'LAR', 'TB', 'ARI', 'HOU', 'JAX', 'TB', 'BYE', 'SF', 'TEN', 'GB', 'ATL', 'NO', 'WSH', 'ATL', 'SEA', 'IND', 'NO'],
+        'CHI':['PRE', 'GB', 'DEN', 'WSH', 'MIN', 'OAK', 'BYE', 'NO', 'LAC', 'PHI', 'DET', 'LAR', 'NYG', 'DET', 'DAL', 'GB', 'KC', 'MIN'],
+        'CIN':['PRE', 'SEA', 'SF', 'BUF', 'PIT', 'ARI', 'BAL', 'JAX', 'LAR', 'BYE', 'BAL', 'OAK', 'PIT', 'NYJ', 'CLE', 'NE', 'MIA', 'CLE'],
+        'CLE':['PRE', 'TEN', 'NYJ', 'LAR', 'BAL', 'SF', 'SEA', 'BYE', 'NE', 'DEN', 'BUF', 'PIT', 'MIA', 'PIT', 'CIN', 'ARI', 'BAL', 'CIN'],
+        'DAL':['PRE', 'NYG', 'WSH', 'MIA', 'NO', 'GB', 'NYJ', 'PHI', 'BYE', 'NYG', 'MIN', 'DET', 'NE', 'BUF', 'CHI', 'LAR', 'PHI', 'WSH'],
+        'DEN':['PRE', 'OAK', 'CHI', 'GB', 'JAX', 'LAC', 'TEN', 'KC', 'IND', 'CLE', 'BYE', 'MIN', 'BUF', 'LAC', 'HOU', 'KC', 'DET', 'OAK'],
+        'DET':['PRE', 'ARI', 'LAC', 'PHI', 'KC', 'BYE', 'GB', 'MIN', 'NYG', 'OAK', 'CHI', 'DAL', 'WSH', 'CHI', 'MIN', 'TB', 'DEN', 'GB'],
+        'GB' :['PRE', 'CHI', 'MIN', 'DEN', 'PHI', 'DAL', 'DET', 'OAK', 'KC', 'LAC', 'CAR', 'BYE', 'SF', 'NYG', 'WSH', 'CHI', 'MIN', 'DET'],
+        'HOU':['PRE', 'NO', 'JAX', 'LAC', 'CAR', 'ATL', 'KC', 'IND', 'OAK', 'JAX', 'BYE', 'BAL', 'IND', 'NE', 'DEN', 'TEN', 'TB', 'TEN'],
+        'IND':['PRE', 'LAC', 'TEN', 'ATL', 'OAK', 'KC', 'BYE', 'HOU', 'DEN', 'PIT', 'MIA', 'JAX', 'HOU', 'TEN', 'TB', 'NO', 'CAR', 'JAX'],
+        'JAC':['PRE', 'KC', 'HOU', 'TEN', 'DEN', 'CAR', 'NO', 'CIN', 'NYJ', 'HOU', 'BYE', 'IND', 'TEN', 'TB', 'LAC', 'OAK', 'ATL', 'IND'],
+        'KC' :['PRE', 'JAX', 'OAK', 'BAL', 'DET', 'IND', 'HOU', 'DEN', 'GB', 'MIN', 'TEN', 'LAC', 'BYE', 'OAK', 'NE', 'DEN', 'CHI', 'LAC'],
+        'LAC':['PRE', 'IND', 'DET', 'HOU', 'MIA', 'DEN', 'PIT', 'TEN', 'CHI', 'GB', 'OAK', 'KC', 'BYE', 'DEN', 'JAX', 'MIN', 'OAK', 'KC'],
+        'LAR':['PRE', 'CAR', 'NO', 'CLE', 'TB', 'SEA', 'SF', 'ATL', 'CIN', 'BYE', 'PIT', 'CHI', 'BAL', 'ARI', 'SEA', 'DAL', 'SF', 'ARI'],
+        'MIA':['PRE', 'BAL', 'NE', 'DAL', 'LAC', 'BYE', 'WSH', 'BUF', 'PIT', 'NYJ', 'IND', 'BUF', 'CLE', 'PHI', 'NYJ', 'NYG', 'CIN', 'NE'],
+        'MIN':['PRE', 'ATL', 'GB', 'OAK', 'CHI', 'NYG', 'PHI', 'DET', 'WSH', 'KC', 'DAL', 'DEN', 'BYE', 'SEA', 'DET', 'LAC', 'GB', 'CHI'],
+        'NE' :['PRE', 'PIT', 'MIA', 'NYJ', 'BUF', 'WSH', 'NYG', 'NYJ', 'CLE', 'BAL', 'BYE', 'PHI', 'DAL', 'HOU', 'KC', 'CIN', 'BUF', 'MIA'],
+        'NO' :['PRE', 'HOU', 'LAR', 'SEA', 'DAL', 'TB', 'JAX', 'CHI', 'ARI', 'BYE', 'ATL', 'TB', 'CAR', 'ATL', 'SF', 'IND', 'TEN', 'CAR'],
+        'NYG':['PRE', 'DAL', 'BUF', 'TB', 'WSH', 'MIN', 'NE', 'ARI', 'DET', 'DAL', 'NYJ', 'BYE', 'CHI', 'GB', 'PHI', 'MIA', 'WSH', 'PHI'],
+        'NYJ':['PRE', 'BUF', 'CLE', 'NE', 'BYE', 'PHI', 'DAL', 'NE', 'JAX', 'MIA', 'NYG', 'WSH', 'OAK', 'CIN', 'MIA', 'BAL', 'PIT', 'BUF'],
+        'OAK':['PRE', 'DEN', 'KC', 'MIN', 'IND', 'CHI', 'BYE', 'GB', 'HOU', 'DET', 'LAC', 'CIN', 'NYJ', 'KC', 'TEN', 'JAX', 'LAC', 'DEN'],
+        'PHI':['PRE', 'WSH', 'ATL', 'DET', 'GB', 'NYJ', 'MIN', 'DAL', 'BUF', 'CHI', 'BYE', 'NE', 'SEA', 'MIA', 'NYG', 'WSH', 'DAL', 'NYG'],
+        'PIT':['PRE', 'NE', 'SEA', 'SF', 'CIN', 'BAL', 'LAC', 'BYE', 'MIA', 'IND', 'LAR', 'CLE', 'CIN', 'CLE', 'ARI', 'BUF', 'NYJ', 'BAL'],
+        'SF' :['PRE', 'TB', 'CIN', 'PIT', 'BYE', 'CLE', 'LAR', 'WSH', 'CAR', 'ARI', 'SEA', 'ARI', 'GB', 'BAL', 'NO', 'ATL', 'LAR', 'SEA'],
+        'SEA':['PRE', 'CIN', 'PIT', 'NO', 'ARI', 'LAR', 'CLE', 'BAL', 'ATL', 'TB', 'SF', 'BYE', 'PHI', 'MIN', 'LAR', 'CAR', 'ARI', 'SF'],
+        'TB' :['PRE', 'SF', 'CAR', 'NYG', 'LAR', 'NO', 'CAR', 'BYE', 'TEN', 'SEA', 'ARI', 'NO', 'ATL', 'JAX', 'IND', 'DET', 'HOU', 'ATL'],
+        'TEN':['PRE', 'CLE', 'IND', 'JAX', 'ATL', 'BUF', 'DEN', 'LAC', 'TB', 'CAR', 'KC', 'BYE', 'JAX', 'IND', 'OAK', 'HOU', 'NO', 'HOU'],
         'WAS':['PRE', 'PHI', 'DAL', 'CHI', 'NYG', 'NE', 'MIA', 'SF', 'MIN', 'BUF', 'BYE', 'NYJ', 'DET', 'CAR', 'GB', 'PHI', 'NYG', 'DAL']
         }
     }
