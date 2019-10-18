@@ -5,10 +5,11 @@ import schedule
 
 positionList = ['QB', 'RB', 'WR', 'TE', 'K', 'DEF']
 
-def getPointsAgainst():
+# This creates a table of points against all teams by weeks
+def buildPointsAgainst():
 
     tableName = 'ptsAgainst'
-    titles = { 'team':'VARCHAR(255)', 'avgPtsAg':'FLOAT', 'position':'VARCHAR(255)' }
+    titles = { 'team':'VARCHAR(255)','opp':'VARCHAR(255)', 'weekPtsAg':'FLOAT', 'position':'VARCHAR(255)' }
     #FIXME
     # If we have the table from before, drop it and regenerate?
     if ( db.checkTableExists( tableName ) == True ):
@@ -20,11 +21,11 @@ def getPointsAgainst():
     for team in schedule.schedule['2019']:
         if team != '':
             for pos in positionList:
-                sqlString = "SELECT avg(ptsAg), opponent, position FROM ( SELECT week, ROUND( sum(weekPts), 1) AS ptsAg, opponent, position FROM weekStats WHERE position='" + pos + "' AND opponent='" + team + "' GROUP BY week ) as T";
+                sqlString = "SELECT ROUND( sum(weekPts), 1) AS ptsAg,teamAbbr, week, opponent, position FROM weekStats WHERE position='" + pos + "' AND opponent='" + team + "' GROUP BY week";
                 result = db.executeSelect( sqlString )
                 lineDictList = []
                 for line in result:
-                    lineDict = {'team':team, 'position':pos, 'avgPtsAg':round( line[0], 2 ) }
+                    lineDict = {'team':team,'opp':line[1], 'position':pos, 'weekPtsAg':round( line[0], 2 ) }
                     db.insert( tableName, lineDict )
                         
 
@@ -38,9 +39,11 @@ def getPointsMult( playerInfo, predWeek ):
     name = playerInfo['name']
     for i in range( 1, predWeek ):
         opponent = schedule.schedule['2019'][team][i]
+        # Once we have actually played someone, get that team's average points against excluding ourselves.
         if ( opponent != 'BYE' ):
             teamWeeksPlayed += 1
-            ptsAgString = "SELECT avgPtsAg, team FROM ptsAgainst WHERE team='" + opponent + "' AND position='" + position + "'";
+            ptsAgString = "SELECT AVG( weekPtsAg ), team FROM ptsAgainst WHERE team='" + opponent + "' AND position='" + position + "' AND opp!='" + team + "'";
+            print( "SELECT AVG( weekPtsAg ), team FROM ptsAgainst WHERE team='" + opponent + "' AND position='" + position + "' AND opp!='" + team + "'");
             result = db.executeSelect( ptsAgString )
             oppAvgAg = result[0][0] 
 
@@ -85,15 +88,19 @@ if __name__=='__main__':
 
     db = sqlConnector.sqlConnector()
 
+    possString = "SELECT name, teamAbbr FROM weekStats where name LIKE '" + player + "'" 
+    possibles = db.executeSelect( possString )
+    player = possibles[0][0]
+    print(player)
     playerInfo = getPlayerInfo( player )
 
-    #Build the points against table
-    getPointsAgainst()
+    #FIXME Build the points against table if it does not already exist
+    #getPointsAgainst()
 
     pointsMult, playerPct = getPointsMult( playerInfo, predWeek )
     
     opponent = schedule.schedule['2019'][playerInfo['team']][predWeek]
-    ptsAgString = "SELECT avgPtsAg, team FROM ptsAgainst WHERE team='" + opponent + "' AND position='" + playerInfo['position'] + "'";
+    ptsAgString = "SELECT AVG( weekPtsAg ), team FROM ptsAgainst WHERE team='" + opponent + "' AND position='" + playerInfo['position'] + "'";
     result = db.executeSelect( ptsAgString )
     oppAvgAg = result[0][0] 
 
