@@ -168,6 +168,6 @@ if __name__=='__main__':
     player = possibles[0][0]
 
     print( player ) 
-    prediction = getProjection( player, predWeek )
+    prediction = getProjection( player, predWeek, rebuild = rebuild)
 
     print( prediction )
