@@ -45,5 +45,6 @@ Julio Jones predction 15.804357952350873
 
 #TODOs
 Build position rankings for a week
+Build rankings for rest of season!!
 Make it easier to build different prediction models
 

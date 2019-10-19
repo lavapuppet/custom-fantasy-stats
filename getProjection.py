@@ -6,7 +6,7 @@ import schedule
 positionList = ['QB', 'RB', 'WR', 'TE', 'K', 'DEF']
 
 # This creates a table of points against all teams by weeks
-def buildPointsAgainst( rebuild = False ):
+def buildPointsAgainst( db, rebuild = False ):
 
     tableName = 'ptsAgainst'
     titles = { 'team':'VARCHAR(255)','opp':'VARCHAR(255)', 'weekPtsAg':'FLOAT', 'position':'VARCHAR(255)' }
@@ -30,7 +30,7 @@ def buildPointsAgainst( rebuild = False ):
                     db.insert( tableName, lineDict )
                         
 
-def getPointsMult( playerInfo, predWeek ):
+def getPointsMult( db, playerInfo, predWeek ):
     W1 = 0.6
     W = [ 1-W1, W1 ]
     jcount = 0 
@@ -51,22 +51,26 @@ def getPointsMult( playerInfo, predWeek ):
             if ( opponent != 'BYE' ):
                 teamWeeksPlayed += 1
                 ptsAgString = "SELECT AVG( weekPtsAg ), team FROM ptsAgainst WHERE team='" + opponent + "' AND position='" + position + "' AND opp!='" + team + "'";
-                print( "SELECT AVG( weekPtsAg ), team FROM ptsAgainst WHERE team='" + opponent + "' AND position='" + position + "' AND opp!='" + team + "'");
+                #print( ptsAgString );
                 result = db.executeSelect( ptsAgString )
                 oppAvgAg = result[0][0] 
 
                 ptsForString = "SELECT ROUND( SUM( weekPts ), 2), teamAbbr, opponent FROM weekStats WHERE teamAbbr='" + team + "' and position='" + position + "' and week=" + str( i );
                 result = db.executeSelect( ptsForString )
+                #print( ptsForString, result )
                 teamPts = result[0][0]
-                ptsMultAvg += teamPts/oppAvgAg
+                if ( result[0][0] != None ):
+                    #print( "team", teamPts, oppAvgAg )
+                    ptsMultAvg += teamPts/oppAvgAg
 
-                playerString = "SELECT weekPts, name, opponent FROM weekStats WHERE name='" + name + "' and week=" + str( i );
-                result = db.executeSelect( playerString )
-                if ( result ):
-                    plWeeksPlayed += 1
-                    playerPts = result[0][0]
-                    playerPct += playerPts/teamPts
-                    #print( oppAvgAg, ptsFor, ptsFor/oppAvgAg )
+                    playerString = "SELECT weekPts, name, opponent FROM weekStats WHERE name='" + name + "' and week=" + str( i ) + " and position='" + position + "'";
+                    result = db.executeSelect( playerString )
+                    if ( result ):
+                        plWeeksPlayed += 1
+                        playerPts = result[0][0]
+                        #print( "player", playerPts )
+                        if teamPts != 0:
+                            playerPct += playerPts/teamPts
 
         if plWeeksPlayed == 0:
             W[jcount] = 0
@@ -85,13 +89,13 @@ def getPointsMult( playerInfo, predWeek ):
             wPtsMult+=ptsMultAvg * W1 
             wPlayerPct += playerPct * W[1] 
 
-    print( round( ptsMultAvg, 2 ) )
+    #print( round( ptsMultAvg, 2 ) )
     return wPtsMult, wPlayerPct
 
 
-def getPlayerInfo( player ):
+def getPlayerInfo( db, player ):
     tableName = 'weekStats'
-    sqlString = "SELECT name, teamAbbr, position FROM " + tableName + " WHERE name='" + player + "'"
+    sqlString = "SELECT name, teamAbbr, position FROM " + tableName + " WHERE name LIKE '" + player + "' AND position IN ( 'QB', 'WR', 'RB', 'TE', 'K', 'DEF')"
     result = db.executeSelect( sqlString )
     playerInfo = {'name':player, 'team':result[0][1], 'position':result[0][2] }
     return playerInfo
@@ -101,9 +105,45 @@ def getPlayerInfo( player ):
 def escapePlayer( player ):
     return player.replace( "'", "''" )
 
+def getProjection( player, predWeek, db = None, rebuild = False ):
+
+    if ( not db ):
+        db = sqlConnector.sqlConnector()
+
+    # Select the first player that matches the player string
+    '''player = escapePlayer( player )
+    possString = "SELECT name, teamAbbr FROM weekStats where name LIKE '" + player + "'" 
+    possibles = db.executeSelect( possString )
+    player = possibles[0][0]
+    #print(player)'''
+    
+    # If the player has "'" characters they will break the sql query. escape them
+    # Note that the user want's their player output in the format they usually see it, so don't overwrite the player name
+    playerInfo = getPlayerInfo( db, escapePlayer( player ) )
+
+    #FIXME Build the points against table if it does not already exist
+    buildPointsAgainst( db, rebuild )
+
+    opponent = schedule.schedule['2019'][playerInfo['team']][predWeek]
+    if opponent != 'BYE':
+        pointsMult, playerPct = getPointsMult( db, playerInfo, predWeek )
+        
+        ptsAgString = "SELECT AVG( weekPtsAg ), team FROM ptsAgainst WHERE team='" + opponent + "' AND position='" + playerInfo['position'] + "'";
+        result = db.executeSelect( ptsAgString )
+        oppAvgAg = result[0][0] 
+
+        predTeamTotal = pointsMult * oppAvgAg
+        #print( "team prediction:", predTeamTotal )
+        predPlayer = predTeamTotal * playerPct
+        #print( player, "predction", predPlayer )
+    else:
+        #print( player, "on bye!!" )
+        predPlayer = 0
+
+    return predPlayer
+
 
 if __name__=='__main__':
-    maxWeek = 7 
     if len( sys.argv ) > 4:
         print( "Usage: getProjections.py playerName weekNumberToPredict toRebuildOrNotToRebuild" )
         exit()
@@ -123,28 +163,11 @@ if __name__=='__main__':
 
     # Select the first player that matches the player string
     player = escapePlayer( player )
-    possString = "SELECT name, teamAbbr FROM weekStats where name LIKE '" + player + "'" 
+    possString = "SELECT name, teamAbbr FROM weekStats where name LIKE '" + player + "' AND position IN ( 'QB', 'WR', 'RB', 'TE', 'K', 'DEF')"
     possibles = db.executeSelect( possString )
     player = possibles[0][0]
-    print(player)
-    
-    # If the player has "'" characters they will break the sql query. escape them
-    # Note that the user want's their player output in the format they usually see it, so don't overwrite the player name
-    playerInfo = getPlayerInfo( escapePlayer( player ) )
 
-    #FIXME Build the points against table if it does not already exist
-    buildPointsAgainst( rebuild )
+    print( player ) 
+    prediction = getProjection( player, predWeek )
 
-    pointsMult, playerPct = getPointsMult( playerInfo, predWeek )
-    
-    opponent = schedule.schedule['2019'][playerInfo['team']][predWeek]
-    ptsAgString = "SELECT AVG( weekPtsAg ), team FROM ptsAgainst WHERE team='" + opponent + "' AND position='" + playerInfo['position'] + "'";
-    result = db.executeSelect( ptsAgString )
-    oppAvgAg = result[0][0] 
-
-    predTeamTotal = pointsMult * oppAvgAg
-    print( "team prediction:", predTeamTotal )
-    predPlayer = predTeamTotal * playerPct
-    print( player, "predction", predPlayer )
-
-
+    print( prediction )
